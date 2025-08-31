@@ -1,6 +1,4 @@
 django
 psycopg2-binary
-requests
 plotly
-pandas
 numpy
