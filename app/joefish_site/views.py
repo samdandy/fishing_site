@@ -12,12 +12,11 @@ def about(request):
     return render(request, 'about.html')
 
 def home(request):
-    db = FishDatabase()
     current_date = datetime.now().date()
-    flow_rate_div = get_flow_rate_graph(db)
-    wind_speed_div = get_wind_speed_graph(db)  
-    temp_div = get_temp_graph(db)
-    wind_direction_table = get_wind_direction_table(db)
+    flow_rate_div = get_flow_rate_graph()
+    wind_speed_div = get_wind_speed_graph()  
+    temp_div = get_temp_graph()
+    wind_direction_table = get_wind_direction_table()
     payload = {
         'flow_rate_div': flow_rate_div,
         'wind_speed_div': wind_speed_div,

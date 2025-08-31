@@ -7,9 +7,9 @@
           <h1 style="font-size: 3rem;">
             {{ date }} Fishing Report
           </h1>
-          <button class="btn btn-primary" id="refresh-btn">
-            Refresh
-          </button>
+        <a class="btn btn-primary" href="{% url 'home' %}">
+  Refresh
+</a>
       </div>
       <div class="plot-container" id="flow-rate-container">
           <h2>Flow Rate</h2>
@@ -30,17 +30,5 @@
   </div>
 </div>
 
-<script>
-document.getElementById('refresh-btn').addEventListener('click', function() {
-    fetch("{% url 'home' %}") 
-        .then(response => response.json())
-        .then(data => {
-            document.getElementById('flow-rate-container').innerHTML = data.flow_rate_div;
-            document.getElementById('wind-speed-container').innerHTML = data.wind_speed_div;
-            document.getElementById('temp-container').innerHTML = data.temp_div;
-            document.getElementById('wind-dir-container').innerHTML = data.wind_direction_table;
-        })
-        .catch(error => console.error('Error refreshing data:', error));
-});
-</script>
+
 {% endblock %}
