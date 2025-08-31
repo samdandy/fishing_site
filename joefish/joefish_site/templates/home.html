@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="home_card">
+  <div class="card ocean-card shadow-lg p-4">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+          <h1 style="font-size: 3rem;">
+            {{ date }} Fishing Report
+          </h1>
+          <button class="btn btn-primary" id="refresh-btn">
+            Refresh
+          </button>
+      </div>
+      <div class="plot-container" id="flow-rate-container">
+          <h2>Flow Rate</h2>
+          {{ flow_rate_div|safe }}
+      </div>
+      <div class="plot-container" id="wind-speed-container">
+          <h2>Wind Speed</h2>
+          {{ wind_speed_div|safe }}
+      </div>
+      <div class="plot-container" id="temp-container">
+          <h2>Temperature</h2>
+          {{ temp_div|safe }}
+      </div>
+      <div class="table-container mt-4" id="wind-dir-container">
+          <h2>Wind Direction Summary</h2>
+          {{ wind_direction_table|safe }}
+      </div>
+  </div>
+</div>
+
+<script>
+document.getElementById('refresh-btn').addEventListener('click', function() {
+    fetch("{% url 'home' %}") 
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('flow-rate-container').innerHTML = data.flow_rate_div;
+            document.getElementById('wind-speed-container').innerHTML = data.wind_speed_div;
+            document.getElementById('temp-container').innerHTML = data.temp_div;
+            document.getElementById('wind-dir-container').innerHTML = data.wind_direction_table;
+        })
+        .catch(error => console.error('Error refreshing data:', error));
+});
+</script>
+{% endblock %}

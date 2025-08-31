@@ -1,0 +1,31 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
+
+/* Full-page gradient background */
+.gradient-bg {
+  background: linear-gradient(
+    135deg,
+    #00fbcd 0%,   /* light aqua */
+    #005be2 50%,  /* deep ocean blue */
+    #0a004b 100%  /* dark navy for depth */
+  );
+  min-height: 100vh;
+  margin: 0;
+}
+
+/* Example heading style */
+.welcome-text {
+  font-family: 'Orbitron', sans-serif;
+  color: white;
+  margin-top: 20%;
+}
+
+.home_card {
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+
+.body {
+    font-family: 'Open Sans', verdana, arial, sans-serif;
+}

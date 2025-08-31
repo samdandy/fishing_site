@@ -1,0 +1,43 @@
+<style>
+  .glow-on-hover {
+      transition: 0.5s ease;
+  }
+  .glow-on-hover:hover {
+      box-shadow: 0 0 5px 2px rgba(220, 245, 0, 0.7); /* Adjust the color and spread as needed */
+  }
+  .gradient-bg {
+  background: linear-gradient(
+    135deg,
+    #00fbcd 0%,   /* light aqua */
+    #005be2 50%,  /* deep ocean blue */
+    #0a004b 100%  /* dark navy for depth */
+  );
+  min-height: 100vh;
+  margin: 0;
+}
+</style>
+
+<nav class="navbar navbar-expand bg-body-tertiary" id="navbar">
+  <div class="container-fluid">
+      <a class="navbar-brand" href="{% url 'home' %}">Joe Fish</a>
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+              <a class="nav-link active glow-on-hover" aria-current="page" href="{% url 'home' %}">Home</a>
+          </li>
+          <li class="nav-item">
+              <a class="nav-link active glow-on-hover" href="{% url 'about' %}">About</a>
+          </li> 
+          <!-- Dropdown for Stats -->
+          <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle glow-on-hover" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Stats
+              </a>
+              <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="{% url 'wind' %}">Wind</a></li>
+                  <li><a class="dropdown-item" href="{% url 'flow_rate' %}">Flow Rate</a></li>
+              </ul>
+          </li>
+      </ul>
+  </div>
+</nav>
+
