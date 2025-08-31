@@ -1,0 +1,7 @@
+__pycache__/
+*.txt
+#uv 
+*.env
+*.python-version
+*.toml
+*.lock
