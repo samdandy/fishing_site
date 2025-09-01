@@ -4,3 +4,4 @@ plotly
 numpy
 gunicorn
 polars
+django-redis

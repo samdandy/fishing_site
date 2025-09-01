@@ -3,9 +3,14 @@
 {% block content %}
 <div class="home_card">
   <div class="card ocean-card shadow-lg p-4">
-      <h2 class="card-title mb-3">
-        Wind
-      </h2>
+      <div class="plot-container" id="wind-speed-container">
+          <h2>Wind Speed</h2>
+          {{ wind_speed_div|safe }}
+      </div>
+      <div class="table-container mt-4" id="wind-dir-container">
+          <h2>Wind Direction Summary</h2>
+          {{ wind_direction_table|safe }}
+      </div>
   </div>
 </div>
 {% endblock %}
