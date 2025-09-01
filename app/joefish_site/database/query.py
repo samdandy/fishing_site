@@ -144,3 +144,12 @@ def get_wind_direction_table():
         </div>"""
     html += "</div></div></body></html>"
     return html
+
+
+def get_all_data():
+    return {
+        "flow_rate": get_flow_rate_data(),
+        "wind_speed": get_wind_speed_data(),
+        "temperature": get_temp_data(),
+        "wind_direction": get_wind_direction_data()
+    }
