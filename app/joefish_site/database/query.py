@@ -104,7 +104,7 @@ def get_wind_direction_data(today=None):
     return queryset_to_polars(qs=qs,values=["date","wind_direction"])
 
 def get_wind_direction_table():
-    df = get_wind_direction_data()
+    df = get_wind_direction_data(today=today)
     html = """<div class="container mx-auto p-4">
         <h1 class="text-2xl font-bold text-center mb-8">Wind Direction Next 7 Days</h1>
         <div class="relative wrap overflow-hidden p-10 h-full">
