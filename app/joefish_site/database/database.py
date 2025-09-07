@@ -15,4 +15,5 @@ class FishDatabase:
                     return df
                 return None
         except Exception as e:
+            print(f"Database query error: {e}")
             return None

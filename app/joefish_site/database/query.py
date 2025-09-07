@@ -1,15 +1,15 @@
-from datetime import timedelta, date
+from datetime import timedelta
 from django.utils.timezone import now
 from joefish_site.models import FlowRate, WindSpeed, Temperature, WindDirection
-from joefish_site.utils.misc import query_data,queryset_to_polars,create_graph
+from joefish_site.utils.misc import query_data, queryset_to_polars, create_graph
 from django.db.models import Avg
-from django.utils.timezone import now
 from django.db.models.functions import TruncDate
 from django.db.models import Count, F, Window
 from django.db.models.functions.window import Rank
 
 
 today = now().date()
+
 
 def get_flow_rate_data():
     seven_days_ago = now() - timedelta(days=7)
@@ -21,65 +21,70 @@ def get_flow_rate_data():
     )
     return queryset_to_polars(data, values=["reading_time_central", "flow_rate"])
 
+
 def get_flow_rate_graph():
     df = get_flow_rate_data()
     return create_graph(
-        df['reading_time_central'].to_list(),
-        df['flow_rate'].to_list(),
-        'River Flow Rate Over Past 7 Days', 
-        'Reading Time (Central)',
-        'Flow Rate (cfs)',
-        'Flow Rate (cfs)'
+        df["reading_time_central"].to_list(),
+        df["flow_rate"].to_list(),
+        "River Flow Rate Over Past 7 Days",
+        "Reading Time (Central)",
+        "Flow Rate (cfs)",
+        "Flow Rate (cfs)",
     )
 
 
 def get_wind_speed_data(today=None):
     filtered_today_onwards = (
-        WindSpeed.objects
-        .filter(start_time_central__date__gte=today) if today else WindSpeed.objects.all()
+        WindSpeed.objects.filter(start_time_central__date__gte=today)
+        if today
+        else WindSpeed.objects.all()
     )
     data = (
         filtered_today_onwards.annotate(date=TruncDate("start_time_central"))
-          .values("date")
-          .annotate(avg_wind_speed=Avg("wind_speed_mph"))
-          .order_by("date")
+        .values("date")
+        .annotate(avg_wind_speed=Avg("wind_speed_mph"))
+        .order_by("date")
     )
     return queryset_to_polars(data, values=["date", "avg_wind_speed"])
+
 
 def get_wind_speed_graph():
     df = get_wind_speed_data()
     return create_graph(
-        df['date'].to_list(),
-        df['avg_wind_speed'].to_list(),
-        'Average Wind Speed Over Next 7 Days',
-        'Reading Time (Central)',
-        'Wind Speed (mph)',
-        'Wind Speed (mph)'
+        df["date"].to_list(),
+        df["avg_wind_speed"].to_list(),
+        "Average Wind Speed Over Next 7 Days",
+        "Reading Time (Central)",
+        "Wind Speed (mph)",
+        "Wind Speed (mph)",
     )
+
 
 # Temperature
 def get_temp_data():
     today = now().date()  # timezone-safe date
     data = (
-        Temperature.objects
-        .filter(start_time_central__date__gte=today)
+        Temperature.objects.filter(start_time_central__date__gte=today)
         .annotate(date=TruncDate("start_time_central"))
         .values("date")
         .annotate(avg_temperature=Avg("temperature_f"))
         .order_by("date")
     )
-    return queryset_to_polars(qs=data,values=["date","avg_temperature"])
+    return queryset_to_polars(qs=data, values=["date", "avg_temperature"])
+
 
 def get_temp_graph():
     df = get_temp_data()
     return create_graph(
-        df['date'].to_list(),
-        df['avg_temperature'].to_list(),
-        'Average Air Temperature Over Next 7 Days',
-        'Reading Time (Central)',
-        'Air Temperature (°F)',
-        'Air Temperature (°F)'
+        df["date"].to_list(),
+        df["avg_temperature"].to_list(),
+        "Average Air Temperature Over Next 7 Days",
+        "Reading Time (Central)",
+        "Air Temperature (°F)",
+        "Air Temperature (°F)",
     )
+
 
 # Wind Direction
 def get_wind_direction_data(today=None):
@@ -89,19 +94,22 @@ def get_wind_direction_data(today=None):
 
     qs = (
         qs.annotate(date=TruncDate("start_time_central"))
-          .values("date", "wind_direction")
-          .annotate(direction_count=Count("wind_direction"))  # count per direction per day
-          .annotate(
-              rank=Window(
-                  expression=Rank(),
-                  partition_by=[F("date")],
-                  order_by=F("direction_count").desc()
-              )
-          )
-          .filter(rank=1)  # keep only most common direction(s) per day
-          .order_by("date")
+        .values("date", "wind_direction")
+        .annotate(
+            direction_count=Count("wind_direction")
+        )  # count per direction per day
+        .annotate(
+            rank=Window(
+                expression=Rank(),
+                partition_by=[F("date")],
+                order_by=F("direction_count").desc(),
+            )
+        )
+        .filter(rank=1)  # keep only most common direction(s) per day
+        .order_by("date")
     )
-    return queryset_to_polars(qs=qs,values=["date","wind_direction"])
+    return queryset_to_polars(qs=qs, values=["date", "wind_direction"])
+
 
 def get_wind_direction_table():
     df = get_wind_direction_data(today=today)
@@ -141,5 +149,5 @@ def get_all_data():
         "flow_rate_div": get_flow_rate_graph(),
         "wind_speed_div": get_wind_speed_graph(),
         "temperature_div": get_temp_graph(),
-        "wind_direction_table": get_wind_direction_table()
+        "wind_direction_table": get_wind_direction_table(),
     }
