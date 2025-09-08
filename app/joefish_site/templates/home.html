@@ -11,6 +11,9 @@
   Refresh
 </a>
       </div>
+      <div class="plot-container" id="wave-height-container">
+          <h2>Wave Height</h2>
+          {{ wave_height_div|safe }}
       <div class="plot-container" id="flow-rate-container">
           <h2>Flow Rate</h2>
           {{ flow_rate_div|safe }}
@@ -22,6 +25,10 @@
       <div class="plot-container" id="temp-container">
           <h2>Temperature</h2>
           {{ temp_div|safe }}
+      </div>
+      <div class="table-container mt-4" id="wave-dir-container">
+          <h2>Wave Direction Summary</h2>
+          {{ wave_direction_table|safe }}
       </div>
       <div class="table-container mt-4" id="wind-dir-container">
           <h2>Wind Direction Summary</h2>

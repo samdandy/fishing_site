@@ -1,0 +1,16 @@
+{% extends 'base.html'%}
+
+{% block content %}
+<div class="home_card">
+  <div class="card ocean-card shadow-lg p-4">
+      <div class="plot-container" id="wave-height-container">
+          <h2>Wave Height</h2>
+          {{ wave_height_div|safe }}
+      </div>
+      <div class="table-container mt-4" id="wave-dir-container">
+          <h2>Wave Direction/Height Summary</h2>
+          {{ wave_direction_table|safe }}
+      </div>
+  </div>
+</div>
+{% endblock %}

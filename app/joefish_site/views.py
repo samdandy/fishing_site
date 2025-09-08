@@ -5,13 +5,15 @@ from joefish_site.database.query import (
     get_wind_speed_graph,
     get_temp_graph,
     get_wind_direction_table,
-    get_all_data,
+    get_home_page_data,
+    get_wave_height_graph,
+    get_wave_direction_table,
 )
 
 
 def home(request):
     current_date = datetime.now().date()
-    payload = get_all_data()
+    payload = get_home_page_data()
     payload["date"] = current_date
     return render(request, "home.html", payload)
 
@@ -40,3 +42,10 @@ def temperature(request):
         "temp_div": get_temp_graph(),
     }
     return render(request, "temperature.html", payload)
+
+def wave(request):
+    payload = {
+        "wave_height_div": get_wave_height_graph(),
+        "wave_direction_table": get_wave_direction_table(),
+    }
+    return render(request, "wave.html", payload)

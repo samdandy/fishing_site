@@ -1,6 +1,6 @@
 from datetime import timedelta
 from django.utils.timezone import now
-from joefish_site.models import FlowRate, WindSpeed, Temperature, WindDirection
+from joefish_site.models import FlowRate, WindSpeed, Temperature, WindDirection, WaveHeight, WaveDirection
 from joefish_site.utils.misc import query_data, queryset_to_polars, create_graph
 from django.db.models import Avg
 from django.db.models.functions import TruncDate
@@ -74,6 +74,8 @@ def get_temp_data():
     return queryset_to_polars(qs=data, values=["date", "avg_temperature"])
 
 
+
+
 def get_temp_graph():
     df = get_temp_data()
     return create_graph(
@@ -143,11 +145,84 @@ def get_wind_direction_table():
     html += "</div></div></body></html>"
     return html
 
+def get_wave_height_data():
+    today = now().date()  # timezone-safe date
+    data = query_data(
+        model=WaveHeight,
+        filters={"time_central__gte": today, "location__iexact": "Sargent"},
+        order_by=["-time_central"],
+        values=["time_central", "wave_height_ft"],
+    )
+    return queryset_to_polars(qs=data, values=["time_central", "wave_height_ft"])
 
-def get_all_data():
+
+def get_wave_height_graph():
+    df = get_wave_height_data()
+    return create_graph(
+        df["time_central"].to_list(),
+        df["wave_height_ft"].to_list(),
+        "Wave Height Over Next 7 Days",
+        "Time (Central)",
+        "Wave Height (ft)",
+        "Wave Height (ft)"
+    )
+
+def get_wave_direction_data():
+    today = now().date()  # timezone-safe date
+    data = query_data(
+        model=WaveDirection,
+        filters={"time_central__gte": today, "location__iexact": "Sargent"},
+        order_by=["time_central"],
+        values=["time_central", "wave_direction","wave_height_ft"],
+    )
+    return queryset_to_polars(qs=data, values=["time_central", "wave_direction","wave_height_ft"])
+
+def get_wave_direction_table():
+    df = get_wave_direction_data()
+
+    html = """
+    <div class="container mt-4">
+        <h1 class="text-center mb-4">Wave Direction and Height Next 7 Days</h1>
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered table-hover align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th scope="col">Date</th>
+                        <th scope="col">Wave Direction</th>
+                        <th scope="col">Wave Height (ft)</th>
+                    </tr>
+                </thead>
+                <tbody>
+    """
+
+    for row in df.rows():
+        html += f"""
+            <tr>
+                <td>{row[0]}</td>
+                <td>{row[1]}</td>
+                <td>{row[2]}</td>
+            </tr>
+        """
+
+    html += """
+                </tbody>
+            </table>
+        </div>
+    </div>
+    """
+
+    return html
+
+
+
+
+
+def get_home_page_data():
     return {
         "flow_rate_div": get_flow_rate_graph(),
         "wind_speed_div": get_wind_speed_graph(),
         "temperature_div": get_temp_graph(),
         "wind_direction_table": get_wind_direction_table(),
+        "wave_height_div": get_wave_height_graph(),
+        "wave_direction_table": get_wave_direction_table(),
     }
